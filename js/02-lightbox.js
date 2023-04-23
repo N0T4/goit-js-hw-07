@@ -20,4 +20,8 @@ for (const galleryItem of galleryItems) {
     ul.appendChild(li)
 }
 
-console.log(galleryItems);
+const lightbox = new SimpleLightbox('.gallery__link', {
+  captionsData: 'alt',
+  captionDelay: 250
+});
+
