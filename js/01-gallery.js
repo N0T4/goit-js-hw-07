@@ -1,6 +1,7 @@
 import { galleryItems } from './gallery-items.js';
 
 const ul = document.querySelector('.gallery');
+let instance = 0;
 
 for (const galleryItem of galleryItems) {
   const li = document.createElement('li');
@@ -18,10 +19,16 @@ for (const galleryItem of galleryItems) {
   
     a.addEventListener('click', (event) => {
         event.preventDefault();
-        const instance = basicLightbox.create(`
+        instance = basicLightbox.create(`
         <img src="${galleryItem.original}" alt="${galleryItem.description}">
         `);
         instance.show();
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            instance.close();
+        }
     });
 
   a.appendChild(img);
