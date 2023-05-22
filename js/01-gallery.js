@@ -1,39 +1,52 @@
-import { galleryItems } from './gallery-items.js';
+import { galleryItems } from "./gallery-items.js";
 
-const ul = document.querySelector('.gallery');
-let instance = 0;
+const gallery = document.querySelector(".gallery");
+createGallery(galleryItems);
 
-for (const galleryItem of galleryItems) {
-  const li = document.createElement('li');
-  const a = document.createElement('a');
-  const img = document.createElement('img');
+let bigImageModalWindow;
 
-  li.classList.add('gallery__item');
-  a.classList.add('gallery__link');
-  img.classList.add('gallery__image');
+gallery.addEventListener("click", showModal);
 
-  img.setAttribute('src', galleryItem.preview);
-  img.setAttribute('data-source', galleryItem.original);
-  img.setAttribute('alt', galleryItem.description);
-  a.setAttribute('href', galleryItem.original);
-  
-    a.addEventListener('click', (event) => {
-        event.preventDefault();
-        instance = basicLightbox.create(`
-        <img src="${galleryItem.original}" alt="${galleryItem.description}">
-        `);
-        instance.show();
-    });
+function createGallery(galleryData) {
+  gallery.innerHTML = galleryData
+    .map(
+      (galleryItem) => `
+    <li class="gallery__item">
+  <a class="gallery__link" href="${galleryItem.original}">
+    <img
+      class="gallery__image"
+      src="${galleryItem.preview}"
+      data-source="${galleryItem.original}"
+      alt="${galleryItem.description}"
+    />
+  </a>
+</li>`
+    )
+    .join("");
+}
 
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            instance.close();
-        }
-    });
+function showModal(event) {
+  if (!event.target.classList.contains("gallery__image")) {
+    return;
+  }
 
-  a.appendChild(img);
-  li.appendChild(a);
-  ul.appendChild(li);
+  event.preventDefault();
+
+  bigImageModalWindow = basicLightbox.create(`
+      <img src="${event.target.dataset.source}" width="800" height="600">
+  `);
+
+  bigImageModalWindow.show();
+
+  window.addEventListener("keydown", closeModal);
+}
+
+function closeModal(event) {
+  console.log(event);
+  if (event.code === "Escape") {
+    bigImageModalWindow.close();
+    window.removeEventListener("keydown", closeModal);
+  }
 }
 
 

@@ -1,27 +1,23 @@
-import { galleryItems } from './gallery-items.js';
+import { galleryItems } from "./gallery-items.js";
 
-const ul = document.querySelector('.gallery')
+const gallery = document.querySelector(".gallery");
+createGallery(galleryItems);
 
-for (const galleryItem of galleryItems) {
-    const li = document.createElement('li')
-    const a = document.createElement('a')
-    const img = document.createElement('img')
-    
-    li.classList.add('gallery__item')
-    a.classList.add('gallery__link')
-    img.classList.add('gallery__image')
-
-    a.setAttribute('href', galleryItem.original)
-    img.setAttribute('src', galleryItem.preview)
-    img.setAttribute('alt', galleryItem.description)
-
-    a.appendChild(img)
-    li.appendChild(a)
-    ul.appendChild(li)
+function createGallery(galleryData) {
+  gallery.innerHTML = galleryData
+    .map(
+      (galleryItem) => `<li class="gallery__item">
+  <a class="gallery__link" href="${galleryItem.original}">
+    <img class="gallery__image" src="${galleryItem.preview}" alt="${galleryItem.description}" />
+  </a>
+</li>`
+    )
+    .join("");
 }
 
-const lightbox = new SimpleLightbox('.gallery__link', {
-  captionsData: 'alt',
-  captionDelay: 250
+let galleryModalWindow = new SimpleLightbox(".gallery__link", {
+  captions: true,
+  captionsData: "alt",
+  captionPosition: "bottom",
+  captionDelay: 250,
 });
-
